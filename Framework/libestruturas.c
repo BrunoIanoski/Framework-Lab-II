@@ -1,15 +1,5 @@
 #include "libestruturas.h"
 
-typedef struct Node {
-  int valor;
-  struct Node* proximo;
-} Node;
-
-typedef struct {
-  Node* inicio;
-  Node* fim;
-} Fila;
-
 void inserir(Fila* fila, int valor) {
   Node* novoNode = (Node*)malloc(sizeof(Node));
   novoNode->valor = valor;
@@ -51,4 +41,16 @@ int remover(Fila* fila) {
   } 
   free(temp);
   return valor;
+}
+
+void liberar_fila(Fila* fila) {
+  Node* atual = fila->inicio;
+  Node* proximo;
+  while (atual != NULL) {
+      proximo = atual->proximo;
+      free(atual); // Libera o nó atual
+      atual = proximo;
+  }
+  fila->inicio = NULL;
+  fila->fim = NULL;
 }

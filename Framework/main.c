@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "libestruturas.h"
 
 void write_text_overwrite(char *filename) {
@@ -23,7 +24,7 @@ void append_text(char *filename, char *text) {
 }
 
 /* Lê todo o arquivo de texto e imprime na tela */
-void read_text(const char *filename) {
+void read_text(const char *filename, Fila* fila, char *filename_out) {
     FILE *f = fopen(filename, "r");
     if (!f) {
         perror("Erro ao abrir arquivo para leitura");
@@ -31,8 +32,26 @@ void read_text(const char *filename) {
     }
 
     char buffer[256];
+    char comando[256];
+    char saida[256];
+    int valor, i = 1;
     while (fgets(buffer, sizeof(buffer), f)) {
-        printf("%s", buffer); // fgets já traz o '\n' se houver
+        sscanf(buffer, "%19s %d", comando, &valor);
+        if (strcmp(comando, "inserir") == 0){
+            inserir(fila, valor);
+            sprintf(saida, "Teste %d: inserir(%d) -> OK", i, valor);
+        }
+        else if (strcmp(comando, "remover") == 0){
+            int valor_removido = remover(fila);
+            sprintf(saida, "Teste %d: remover() = %d -> OK", i, valor_removido);
+        }
+        else if (strcmp(comando, "visualizar") == 0){
+            visualizar(fila);
+            sprintf(saida, "Teste %d: visualizar -> OK", i);
+        }
+        
+    append_text(filename_out, saida);
+    i++;
     }
 
     if (ferror(f)) {
@@ -44,20 +63,36 @@ void read_text(const char *filename) {
 
 
 int main(int argc, char *argv[]) {
-    char *filename = "resultado.txt";
-    
-    if (argv[1] == NULL) {
-        append_text(filename, "ARQUIVO DE ENTRADA NÃO ENCONTRADO");
+    Fila* fila = (Fila*)malloc(sizeof(Fila)); 
+    fila->inicio = NULL; 
+    fila->fim = NULL; 
+
+    if (fila == NULL) {
+        perror("Erro ao alocar memoria para Fila");
         return 1;
     }
 
-    if (argv[2] == NULL) {
-        write_text_overwrite(filename);
+    char *filename_out = "resultado.txt";
+    
+    // Validação dos argumentos
+    if (argc < 2) {
+        write_text_overwrite(filename_out);
+        append_text(filename_out, "ARQUIVO DE ENTRADA NÃO ENCONTRADO");
+        free(fila);
+        return 1;
     }
+    if (argc >= 3) {
+        filename_out = argv[2];
+    }
+    
+    write_text_overwrite(filename_out);
 
-    else {
-        filename = argv[2];
-    }
+    // Manipulação das funções
+
+    read_text(argv[1], fila, filename_out);
+
+    liberar_fila(fila);    
+    free(fila);
 
     return 0;
 }

@@ -1,0 +1,7 @@
+Teste 1: inserir(5) -> OK
+Teste 2: inserir(8) -> OK
+Teste 3: inserir(9) -> OK
+Teste 4: remover() = 5 -> OK
+Teste 5: remover() = 8 -> OK
+Teste 6: visualizar -> OK
+Teste 7: visualizar -> OK
