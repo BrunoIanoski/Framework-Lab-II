@@ -33,11 +33,13 @@ void inserir(Fila* fila, int valor);
 int remover(Fila* fila);
 void visualizar(Fila* fila);
 void liberar_fila(Fila* fila);
+void filaParaString(Fila *fila, char *saida);
 
 // Funções Pilha
 Pilha* criarPilha();
 void push(Pilha* pilha, int valor);
 int pop(Pilha* pilha);
 int top(Pilha* pilha);
+void pilhaParaString(Pilha *pilha, char *saida); 
 
 #endif

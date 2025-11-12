@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "libestruturas.h"
+#include "libtest.h"
 
 void write_text_overwrite(char *filename) {
     FILE *f = fopen(filename, "w"); // "w" cria ou sobrescreve
@@ -24,7 +25,7 @@ void append_text(char *filename, char *text) {
 }
 
 /* Lê todo o arquivo de texto e imprime na tela */
-void read_text(const char *filename, Fila* fila, char *filename_out, Pilha* pilha) {
+void read_text(const char *filename, Teste* t, Fila* fila, char *filename_out, Pilha* pilha) {
     FILE *f = fopen(filename, "r");
     if (!f) {
         perror("Erro ao abrir arquivo para leitura");
@@ -34,37 +35,18 @@ void read_text(const char *filename, Fila* fila, char *filename_out, Pilha* pilh
     char buffer[256];
     char comando[256];
     char saida[256];
-    int valor, i = 1;
+    int valor;
     while (fgets(buffer, sizeof(buffer), f)) {
-        sscanf(buffer, "%19s %d %d", comando, &valor);
-        if (strcmp(comando, "inserir") == 0){
-            inserir(fila, valor);
-            sprintf(saida, "Teste %d: inserir(%d) -> OK", i, valor);
-        }
-        else if (strcmp(comando, "remover") == 0){
-            int valor_removido = remover(fila);
-            sprintf(saida, "Teste %d: remover() = %d -> OK", i, valor_removido);
-        }
-        else if (strcmp(comando, "visualizar") == 0){
-            visualizar(fila);
-            sprintf(saida, "Teste %d: visualizar -> OK", i);
-        }
-        else if (strcmp(comando, "PUSH") == 0){
-            push(pilha, valor);
-            sprintf(saida, "Teste %d: PUSH(%d) -> OK", i, valor);
-        }
-        else if (strcmp(comando, "TOP") == 0){
-            top(pilha);
-            sprintf(saida, "Teste %d: TOP() = %d -> OK", i, valor);
-        }
-        else if (strcmp(comando, "POP") == 0){
-            pop(pilha);
-            sprintf(saida, "Teste %d: POP() = %d -> OK", i, valor);
-        }
+        sscanf(buffer, "%19s %d %s", comando, &valor, &saida);
+        t.operacao = comando;
+        t.valor = valor;
+        t.resultado = saida;
+        char* resultado[0] = "\0";
+        executarTeste(t ,fila, pilha, resultado);
+        printf(resultado);
+    }
         
     append_text(filename_out, saida);
-    i++;
-    }
 
     if (ferror(f)) {
         perror("Erro durante a leitura");
@@ -77,6 +59,7 @@ void read_text(const char *filename, Fila* fila, char *filename_out, Pilha* pilh
 int main(int argc, char *argv[]) {
     Fila* fila = criarFila();
     Pilha* pilha = criarPilha();
+    Teste* t;
 
     if (fila == NULL) {
         perror("Erro ao alocar memoria para Fila");
@@ -105,7 +88,7 @@ int main(int argc, char *argv[]) {
 
     // Manipulação das funções
 
-    read_text(argv[1], fila, filename_out, pilha);
+    read_text(argv[1], t, fila, filename_out, pilha);
     
     liberar_pilha(pilha);
     free(pilha);
