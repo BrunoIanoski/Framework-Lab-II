@@ -24,7 +24,7 @@ void append_text(char *filename, char *text) {
 }
 
 /* Lê todo o arquivo de texto e imprime na tela */
-void read_text(const char *filename, Fila* fila, char *filename_out) {
+void read_text(const char *filename, Fila* fila, char *filename_out, Pilha* pilha) {
     FILE *f = fopen(filename, "r");
     if (!f) {
         perror("Erro ao abrir arquivo para leitura");
@@ -36,7 +36,7 @@ void read_text(const char *filename, Fila* fila, char *filename_out) {
     char saida[256];
     int valor, i = 1;
     while (fgets(buffer, sizeof(buffer), f)) {
-        sscanf(buffer, "%19s %d", comando, &valor);
+        sscanf(buffer, "%19s %d %d", comando, &valor);
         if (strcmp(comando, "inserir") == 0){
             inserir(fila, valor);
             sprintf(saida, "Teste %d: inserir(%d) -> OK", i, valor);
@@ -48,6 +48,18 @@ void read_text(const char *filename, Fila* fila, char *filename_out) {
         else if (strcmp(comando, "visualizar") == 0){
             visualizar(fila);
             sprintf(saida, "Teste %d: visualizar -> OK", i);
+        }
+        else if (strcmp(comando, "PUSH") == 0){
+            push(pilha, valor);
+            sprintf(saida, "Teste %d: PUSH(%d) -> OK", i, valor);
+        }
+        else if (strcmp(comando, "TOP") == 0){
+            top(pilha);
+            sprintf(saida, "Teste %d: TOP() = %d -> OK", i, valor);
+        }
+        else if (strcmp(comando, "POP") == 0){
+            pop(pilha);
+            sprintf(saida, "Teste %d: POP() = %d -> OK", i, valor);
         }
         
     append_text(filename_out, saida);
@@ -63,12 +75,16 @@ void read_text(const char *filename, Fila* fila, char *filename_out) {
 
 
 int main(int argc, char *argv[]) {
-    Fila* fila = (Fila*)malloc(sizeof(Fila)); 
-    fila->inicio = NULL; 
-    fila->fim = NULL; 
+    Fila* fila = criarFila();
+    Pilha* pilha = criarPilha();
 
     if (fila == NULL) {
         perror("Erro ao alocar memoria para Fila");
+        return 1;
+    }
+    
+    if (pilha == NULL) {
+        perror("Erro ao alocar memoria para pilha");
         return 1;
     }
 
@@ -89,7 +105,10 @@ int main(int argc, char *argv[]) {
 
     // Manipulação das funções
 
-    read_text(argv[1], fila, filename_out);
+    read_text(argv[1], fila, filename_out, pilha);
+    
+    liberar_pilha(pilha);
+    free(pilha);
 
     liberar_fila(fila);    
     free(fila);

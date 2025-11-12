@@ -54,3 +54,60 @@ void liberar_fila(Fila* fila) {
   fila->inicio = NULL;
   fila->fim = NULL;
 }
+
+Fila* criarFila() {
+  Fila* fila = (Fila*)malloc(sizeof(Fila)); 
+  fila->inicio = NULL; 
+  fila->fim = NULL; 
+  return fila;
+}
+
+
+// Funções de Pilha
+Pilha* criarPilha() {
+  Pilha* pilha = (Pilha*)malloc(sizeof(Pilha));
+  pilha->topo = NULL;
+  return pilha;
+}
+
+void push(Pilha* pilha, int valor) {
+  NodeP* novoNo = (NodeP*)malloc(sizeof(NodeP));
+  novoNo->dado = valor;
+  novoNo->prox = pilha->topo;
+  pilha->topo = novoNo;
+}
+
+
+int pop(Pilha* pilha) {
+  if (pilha->topo == NULL) {
+      printf("\n > Pilha vazia! Não é possível desempilhar.\n");
+      return -1;
+  }
+  NodeP* temp = pilha->topo;
+  int valor = temp->dado;
+  pilha->topo = pilha->topo->prox;
+  free(temp);
+  return valor;
+}
+
+
+int top(Pilha* pilha)
+{   
+  if (pilha->topo == NULL) {
+      printf("Erro: pilha vazia\n");
+      return -1; 
+  }
+  return pilha->topo->dado;
+}
+
+
+void liberar_pilha(Pilha* pilha) {
+NodeP* atual = pilha->topo;
+NodeP* proximo;
+while (atual != NULL) {
+    proximo = atual->prox;
+    free(atual); // Libera o nó atual
+    atual = proximo;
+}
+pilha->topo = NULL;
+}
