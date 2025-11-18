@@ -13,13 +13,8 @@ typedef struct {
 } Teste;
 
 // Executa teste individual. Retorna 1 se passou, 0 se falhou
-int executarTesteFila(Teste* t, Fila* fila, char* resultado);
-int executarTestePilha(Teste* t, Pilha* pilha, char* resultado);
-int exercutarTeste(Teste* t, Fila* fila, Pilha* pilha, char* resultado);
+int executarTeste(Teste* t, Fila* fila, Pilha* pilha, char* resultado);
 
 void registrarResultado(FILE* out, Teste* t, int sucesso, const char* resultado);
-
-// (opcional) Roda todos os testes de um arquivo de entrada
-// void rodarTestes(const char* nomeArquivoEntrada, const char* nomeArquivoSaida);
 
 #endif

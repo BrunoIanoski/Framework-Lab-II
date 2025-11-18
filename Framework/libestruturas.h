@@ -21,7 +21,6 @@ typedef struct NodeP {
   struct NodeP* prox;
 } NodeP;
 
-
 typedef struct {
   NodeP* topo;
 } Pilha;
@@ -40,6 +39,7 @@ Pilha* criarPilha();
 void push(Pilha* pilha, int valor);
 int pop(Pilha* pilha);
 int top(Pilha* pilha);
-void pilhaParaString(Pilha *pilha, char *saida); 
+void pilhaParaString(Pilha *pilha, char *saida);
+void liberar_pilha(Pilha* pilha);
 
 #endif

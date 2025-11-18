@@ -31,22 +31,35 @@ void read_text(const char *filename, Teste* t, Fila* fila, char *filename_out, P
         perror("Erro ao abrir arquivo para leitura");
         return;
     }
+    
+    FILE *out = fopen(filename_out, "a");
+    if (!out) {
+        perror("Erro ao abrir arquivo de saída");
+        fclose(f);
+        return;
+    }
 
     char buffer[256];
-    char comando[256];
-    char saida[256];
-    int valor;
+    char comando[20];
+    char esperado[100];
+    char valor_str[20];
     while (fgets(buffer, sizeof(buffer), f)) {
-        sscanf(buffer, "%19s %d %s", comando, &valor, &saida);
-        t.operacao = comando;
-        t.valor = valor;
-        t.resultado = saida;
-        char* resultado[0] = "\0";
-        executarTeste(t ,fila, pilha, resultado);
-        printf(resultado);
+        if (sscanf(buffer, "%19s %19s %99[^\n]", comando, valor_str, esperado) != 3){
+            continue;
+        }
+        esperado[strcspn(esperado, "\r\n")] = '\0';
+        strcpy(t->operacao, comando);
+        strcpy(t->esperado, esperado);
+        if (strcmp(valor_str, "_") != 0)
+            t->valor = atoi(valor_str);
+        else
+            t->valor = 0; 
+        char resultado[256] = "";
+        int sucesso = executarTeste(t, fila, pilha, resultado);
+        registrarResultado(out, t, sucesso, resultado);
     }
-        
-    append_text(filename_out, saida);
+    
+    fclose(out);
 
     if (ferror(f)) {
         perror("Erro durante a leitura");
@@ -59,25 +72,15 @@ void read_text(const char *filename, Teste* t, Fila* fila, char *filename_out, P
 int main(int argc, char *argv[]) {
     Fila* fila = criarFila();
     Pilha* pilha = criarPilha();
-    Teste* t;
-
-    if (fila == NULL) {
-        perror("Erro ao alocar memoria para Fila");
-        return 1;
-    }
     
-    if (pilha == NULL) {
-        perror("Erro ao alocar memoria para pilha");
-        return 1;
-    }
-
+    Teste t;
+    
     char *filename_out = "resultado.txt";
     
     // Validação dos argumentos
     if (argc < 2) {
         write_text_overwrite(filename_out);
         append_text(filename_out, "ARQUIVO DE ENTRADA NÃO ENCONTRADO");
-        free(fila);
         return 1;
     }
     if (argc >= 3) {
@@ -88,7 +91,7 @@ int main(int argc, char *argv[]) {
 
     // Manipulação das funções
 
-    read_text(argv[1], t, fila, filename_out, pilha);
+    read_text(argv[1], &t, fila, filename_out, pilha);
     
     liberar_pilha(pilha);
     free(pilha);

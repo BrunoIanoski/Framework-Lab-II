@@ -1,4 +1,5 @@
 #include "libestruturas.h"
+#include <string.h>
 
 void inserir(Fila* fila, int valor) {
   Node* novoNode = (Node*)malloc(sizeof(Node));
@@ -63,17 +64,18 @@ Fila* criarFila() {
 }
 
 void filaParaString(Fila* fila, char* saida) {
-  saida[0] = '\0';  // inicializa string vazia
-  Node* atual = fila->inicio;
-  char temp[30];    // string temporária
+    saida[0] = '\0';
+    Node* atual = fila->inicio;
+    char temp[30];
 
-  while (atual != NULL) {
-    sprintf(temp, "%d", atual->valor);
-    strcat(saida, temp);  //concatena temp com saída
-    if (atual->proximo != NULL)
-      strcat(saida, ","); //adiciona vírgula entre os valores e sem espaços
-      atual = atual->proximo;
-  }
+    while (atual != NULL) {
+        sprintf(temp, "%d", atual->valor);
+        strcat(saida, temp);
+        if (atual->proximo != NULL) {
+            strcat(saida, ",");
+        }
+        atual = atual->proximo;
+    }
 }
 
 // Funções de Pilha
@@ -125,15 +127,16 @@ void liberar_pilha(Pilha* pilha) {
 }
 
 void pilhaParaString(Pilha *pilha, char *saida) {
-  saida[0] = '\0'; // inicializa a string
-  Node* atual = pilha->topo;
-  char temp[30]; //string temporária que guarda a versão em texto do valor atual da pilha.
-  while (atual != NULL) {
-    sprintf(temp, "%d", atual->valor);
-    strcat(saida, temp);//concatena temp na saída principal
-    if (atual->proximo != NULL) {
-      strcat(saida, ",");//acrescenta vírgula entre valores
-      atual = atual->proximo;
+  saida[0] = '\0';
+    NodeP* atual = pilha->topo;
+    char temp[30];
+
+    while (atual != NULL) {
+        sprintf(temp, "%d", atual->dado);
+        strcat(saida, temp);
+        if (atual->prox != NULL) {
+            strcat(saida, ",");
+        }
+        atual = atual->prox;
     }
-  }
 }
