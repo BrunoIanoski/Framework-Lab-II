@@ -6,5 +6,6 @@ POP _ (esperado=null, obtido=null) -> SUCESSO
 TOP _ (esperado=20, obtido=null) -> FALHA
 INSERIR 5 (esperado=5, obtido=5) -> SUCESSO
 INSERIR 8 (esperado=5,8, obtido=5,8) -> SUCESSO
+VISUALIZAR _ (esperado=5,8, obtido=5,8) -> SUCESSO
 REMOVER _ (esperado=8, obtido=8) -> SUCESSO
 REMOVER _ (esperado=null, obtido=null) -> SUCESSO
