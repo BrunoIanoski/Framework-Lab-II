@@ -1,6 +1,0 @@
-inserir 5
-inserir 8
-inserir 9
-remover 
-remover 
-visualizar
