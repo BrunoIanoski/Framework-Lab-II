@@ -50,6 +50,15 @@ int executarTeste(Teste* t, Fila* fila, Pilha* pilha, char* resultado) {
         }
     }
 
+    else if (strcmp(t->operacao, "VISUALIZAR") == 0) {
+        if (fila->inicio == NULL)
+            strcpy(resultado, "null");
+        else
+            filaParaString(fila, resultado);
+    
+        sucesso = (strcmp(resultado, t->esperado) == 0);
+    }
+
     else {
         strcpy(resultado, "operacao_invalida");
         sucesso = 0;

@@ -1,7 +1,10 @@
-Teste 1: inserir(5) -> OK
-Teste 2: inserir(8) -> OK
-Teste 3: inserir(9) -> OK
-Teste 4: remover() = 5 -> OK
-Teste 5: remover() = 8 -> OK
-Teste 6: visualizar -> OK
-Teste 7: visualizar -> OK
+PUSH 10 (esperado=10, obtido=10) -> SUCESSO
+PUSH 20 (esperado=20,10, obtido=20,10) -> SUCESSO
+TOP _ (esperado=20, obtido=20) -> SUCESSO
+POP _ (esperado=10, obtido=10) -> SUCESSO
+POP _ (esperado=null, obtido=null) -> SUCESSO
+TOP _ (esperado=20, obtido=null) -> FALHA
+INSERIR 5 (esperado=5, obtido=5) -> SUCESSO
+INSERIR 8 (esperado=5,8, obtido=5,8) -> SUCESSO
+REMOVER _ (esperado=8, obtido=8) -> SUCESSO
+REMOVER _ (esperado=null, obtido=null) -> SUCESSO
